@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Menu, Sun, Moon } from 'lucide-react';
+import { Menu, Sun, Moon, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSidebar } from '@/components/ui/sidebar';
@@ -21,7 +20,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ isOnline = true }) => {
           variant="ghost"
           size="icon"
           onClick={toggleSidebar}
-          className="h-9 w-9 rounded-xl transition-all duration-200 hover:scale-105 hover:bg-accent/80"
+          className="h-10 w-10 rounded-xl transition-all duration-200 hover:scale-105 hover:bg-accent/80"
           aria-label="Toggle sidebar"
         >
           <Menu className="h-5 w-5" />
@@ -61,10 +60,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ isOnline = true }) => {
           variant="ghost"
           size="icon"
           onClick={toggleTheme}
-          className="h-9 w-9 rounded-xl transition-all duration-200 hover:scale-105 hover:bg-accent/80"
+          className="h-10 w-10 rounded-xl transition-all duration-200 hover:scale-105 hover:bg-accent/80"
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          {theme === "dark" ? <Settings className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
         </Button>
       </div>
     </header>

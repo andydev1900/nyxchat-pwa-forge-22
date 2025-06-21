@@ -9,13 +9,11 @@ import { useMemory, MemoryEntry } from '@/contexts/MemoryContext';
 import { useToast } from '@/hooks/use-toast';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useNavigate } from 'react-router-dom';
 
 export const MemoryManager = () => {
   const { memories, addMemory, updateMemory, deleteMemory, clearAllMemories } = useMemory();
   const { toast } = useToast();
   const isMobile = useIsMobile();
-  const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMemory, setSelectedMemory] = useState<MemoryEntry | null>(null);
@@ -191,6 +189,11 @@ export const MemoryManager = () => {
     setIsEditing(true);
   };
 
+  const handleClose = () => {
+    // Navigate back to chat interface
+    window.history.back();
+  };
+
   const categoryOptions = [
     { value: 'personal', label: 'Personal' },
     { value: 'preferences', label: 'Preferences' },
@@ -209,10 +212,10 @@ export const MemoryManager = () => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => navigate('/')}
-          className={`${isMobile ? 'h-8 w-8' : 'h-9 w-9'} rounded-xl hover:bg-accent/50 transition-elegant hover:-translate-y-0.5 active:translate-y-0`}
+          onClick={handleClose}
+          className={`${isMobile ? 'h-10 w-10' : 'h-9 w-9'} rounded-xl hover:bg-accent/50 transition-elegant hover:-translate-y-0.5 active:translate-y-0 min-h-[44px] min-w-[44px]`}
         >
-          <X className={`${isMobile ? 'h-4 w-4' : 'h-5 w-5'}`} />
+          <X className={`${isMobile ? 'h-5 w-5' : 'h-5 w-5'}`} />
         </Button>
       </div>
 
@@ -229,15 +232,15 @@ export const MemoryManager = () => {
                 <Button
                   onClick={() => setShowNewMemoryForm(true)}
                   size={isMobile ? "sm" : "default"}
-                  className={`${isMobile ? 'h-8 w-8 text-xs' : 'h-9 w-9'} rounded-xl transition-elegant hover:-translate-y-0.5 active:translate-y-0`}
+                  className={`${isMobile ? 'h-10 w-10 text-xs' : 'h-9 w-9'} rounded-xl transition-elegant hover:-translate-y-0.5 active:translate-y-0 min-h-[44px] min-w-[44px]`}
                 >
-                  <Plus className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+                  <Plus className={`${isMobile ? 'h-4 w-4' : 'h-4 w-4'}`} />
                 </Button>
                 <Button
                   onClick={handleClearAllRequest}
                   variant="destructive"
                   size={isMobile ? "sm" : "default"}
-                  className={`${isMobile ? 'h-8 text-xs' : 'h-9 text-sm'} rounded-xl transition-elegant hover:-translate-y-0.5 active:translate-y-0`}
+                  className={`${isMobile ? 'h-10 text-xs' : 'h-9 text-sm'} rounded-xl transition-elegant hover:-translate-y-0.5 active:translate-y-0 min-h-[44px]`}
                   disabled={memories.length === 0}
                 >
                   Clear All
@@ -247,12 +250,13 @@ export const MemoryManager = () => {
             
             {/* Search */}
             <div className="relative">
-              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground/70 ${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground/70 ${isMobile ? 'h-4 w-4' : 'h-4 w-4'}`} />
               <Input
                 placeholder="Search memories..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={`${isMobile ? 'pl-8 h-8 text-xs' : 'pl-10 h-10'} rounded-xl border-2 border-border/30 focus:border-primary/60 transition-elegant bg-background/50 backdrop-blur-sm`}
+                className={`${isMobile ? 'pl-10 h-12 text-base' : 'pl-10 h-10'} rounded-xl border-2 border-border/30 focus:border-primary/60 transition-elegant bg-background/50 backdrop-blur-sm`}
+                style={{ fontSize: '16px' }}
               />
             </div>
           </CardHeader>
@@ -266,13 +270,15 @@ export const MemoryManager = () => {
                       placeholder="Memory content..."
                       value={newMemory.content}
                       onChange={(e) => setNewMemory(prev => ({ ...prev, content: e.target.value }))}
-                      className={`resize-none rounded-xl border-2 border-border/30 focus:border-primary/60 transition-elegant bg-background/50 ${isMobile ? 'min-h-16 text-xs' : 'min-h-20'}`}
+                      className={`resize-none rounded-xl border-2 border-border/30 focus:border-primary/60 transition-elegant bg-background/50 ${isMobile ? 'min-h-20 text-base' : 'min-h-20'}`}
+                      style={{ fontSize: '16px' }}
                     />
                     <div className="grid grid-cols-2 gap-2">
                       <select
                         value={newMemory.category}
                         onChange={(e) => setNewMemory(prev => ({ ...prev, category: e.target.value as MemoryEntry['category'] }))}
-                        className={`border border-input bg-background px-2 py-1 rounded ${isMobile ? 'h-7 text-xs' : 'h-8'}`}
+                        className={`border border-input bg-background px-2 py-1 rounded ${isMobile ? 'h-10 text-base' : 'h-8'}`}
+                        style={{ fontSize: '16px' }}
                       >
                         {categoryOptions.map(option => (
                           <option key={option.value} value={option.value}>
@@ -287,20 +293,22 @@ export const MemoryManager = () => {
                         placeholder="Importance (1-10)"
                         value={newMemory.importance}
                         onChange={(e) => setNewMemory(prev => ({ ...prev, importance: parseInt(e.target.value) || 5 }))}
-                        className={isMobile ? 'h-7 text-xs' : 'h-8'}
+                        className={isMobile ? 'h-10 text-base' : 'h-8'}
+                        style={{ fontSize: '16px' }}
                       />
                     </div>
                     <Input
                       placeholder="Tags (comma-separated)..."
                       value={newMemory.tags}
                       onChange={(e) => setNewMemory(prev => ({ ...prev, tags: e.target.value }))}
-                      className={isMobile ? 'h-7 text-xs' : 'h-8'}
+                      className={isMobile ? 'h-10 text-base' : 'h-8'}
+                      style={{ fontSize: '16px' }}
                     />
                     <div className="flex gap-2">
                       <Button 
                         onClick={handleAddMemory}
                         size={isMobile ? "sm" : "default"}
-                        className={`${isMobile ? 'h-7 text-xs' : 'h-8'} ripple-button`}
+                        className={`${isMobile ? 'h-10 text-base' : 'h-8'} ripple-button min-h-[44px]`}
                       >
                         Add
                       </Button>
@@ -308,7 +316,7 @@ export const MemoryManager = () => {
                         onClick={() => setShowNewMemoryForm(false)}
                         variant="outline"
                         size={isMobile ? "sm" : "default"}
-                        className={`${isMobile ? 'h-7 text-xs' : 'h-8'} ripple-button`}
+                        className={`${isMobile ? 'h-10 text-base' : 'h-8'} ripple-button min-h-[44px]`}
                       >
                         Cancel
                       </Button>
@@ -325,7 +333,7 @@ export const MemoryManager = () => {
                   }`}
                   onClick={() => setSelectedMemory(memory)}
                 >
-                  <CardContent className={`${isMobile ? 'p-3' : 'p-4'}`}>
+                  <CardContent className={`${isMobile ? 'p-4' : 'p-4'}`}>
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -336,7 +344,7 @@ export const MemoryManager = () => {
                             Importance: {memory.importance}
                           </span>
                         </div>
-                        <p className={`text-foreground mt-1 line-clamp-2 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+                        <p className={`text-foreground mt-1 line-clamp-2 ${isMobile ? 'text-sm' : 'text-sm'}`}>
                           {memory.content}
                         </p>
                         {memory.tags && memory.tags.length > 0 && (
@@ -360,9 +368,9 @@ export const MemoryManager = () => {
                         }}
                         variant="ghost"
                         size="icon"
-                        className={`${isMobile ? 'h-6 w-6' : 'h-8 w-8'} ripple-button ml-2 flex-shrink-0`}
+                        className={`${isMobile ? 'h-10 w-10' : 'h-8 w-8'} ripple-button ml-2 flex-shrink-0 min-h-[44px] min-w-[44px]`}
                       >
-                        <Trash2 className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'}`} />
+                        <Trash2 className={`${isMobile ? 'h-4 w-4' : 'h-4 w-4'}`} />
                       </Button>
                     </div>
                   </CardContent>
