@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -70,8 +69,14 @@
       window.addEventListener('resize', setVH);
       window.addEventListener('orientationchange', setVH);
 
-      // Enhanced PWA Service Worker Registration
-      if ('serviceWorker' in navigator) {
+      // Enhanced PWA Service Worker Registration with proper error handling
+      function isServiceWorkerSupported() {
+        return 'serviceWorker' in navigator && 
+               !window.location.hostname.includes('stackblitz') &&
+               !window.location.hostname.includes('webcontainer');
+      }
+
+      if (isServiceWorkerSupported()) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js')
             .then(registration => {
@@ -98,9 +103,12 @@
               
             })
             .catch(err => {
-              console.error('SW registration failed:', err);
+              // Silently handle service worker registration failures in unsupported environments
+              console.info('Service Worker not available in this environment');
             });
         });
+      } else {
+        console.info('Service Worker not supported in this environment - PWA features will be limited');
       }
 
       // Enhanced mobile touch handling
